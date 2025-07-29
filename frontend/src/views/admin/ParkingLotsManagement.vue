@@ -479,52 +479,109 @@ export default {
       showCreateModal.value = true
     }
 
+    // FIXED saveLot method with proper error handling
     const saveLot = async () => {
-      const lotData = {
-        prime_location_name: lotForm.prime_location_name,
-        address: lotForm.address,
-        pin_code: lotForm.pin_code,
-        price: parseFloat(lotForm.price),
-        number_of_spots: parseInt(lotForm.number_of_spots)
-      }
+      try {
+        // Validate form data
+        if (!lotForm.prime_location_name.trim()) {
+          toast.error('Location name is required')
+          return
+        }
+        if (!lotForm.address.trim()) {
+          toast.error('Address is required')
+          return
+        }
+        if (!lotForm.pin_code.trim() || lotForm.pin_code.length !== 6) {
+          toast.error('Valid 6-digit pin code is required')
+          return
+        }
+        if (!lotForm.price || parseFloat(lotForm.price) <= 0) {
+          toast.error('Valid price is required')
+          return
+        }
+        if (!lotForm.number_of_spots || parseInt(lotForm.number_of_spots) <= 0) {
+          toast.error('Valid number of spots is required')
+          return
+        }
 
-      let result
-      if (editingLot.value) {
-        result = await store.dispatch('updateParkingLot', {
-          lotId: editingLot.value.id,
-          lotData
-        })
-      } else {
-        result = await store.dispatch('createParkingLot', lotData)
-      }
+        const lotData = {
+          prime_location_name: lotForm.prime_location_name.trim(),
+          address: lotForm.address.trim(),
+          pin_code: lotForm.pin_code.trim(),
+          price: parseFloat(lotForm.price),
+          number_of_spots: parseInt(lotForm.number_of_spots)
+        }
 
-      if (result.success) {
-        toast.success(
-          editingLot.value 
-            ? 'Parking lot updated successfully!' 
-            : 'Parking lot created successfully!'
-        )
-        closeModal()
-        refreshLots()
-      } else {
-        toast.error(result.error)
+        console.log('Component: Saving lot data:', lotData)
+        console.log('Component: Editing lot:', editingLot.value)
+
+        let result
+        if (editingLot.value) {
+          console.log('Component: Updating lot with ID:', editingLot.value.id)
+          result = await store.dispatch('updateParkingLot', {
+            lotId: editingLot.value.id,
+            lotData
+          })
+        } else {
+          console.log('Component: Creating new lot')
+          result = await store.dispatch('createParkingLot', lotData)
+        }
+
+        console.log('Component: Action result:', result)
+
+        if (result && result.success) {
+          toast.success(
+            editingLot.value 
+              ? 'Parking lot updated successfully!' 
+              : 'Parking lot created successfully!'
+          )
+          closeModal()
+        } else {
+          const errorMessage = result?.error || 'Operation failed'
+          toast.error(errorMessage)
+          console.error('Component: Save operation failed:', result)
+        }
+      } catch (error) {
+        console.error('Component: Error in saveLot:', error)
+        toast.error('An unexpected error occurred: ' + error.message)
       }
     }
 
+    // FIXED deleteLot method with proper error handling
     const deleteLot = async (lot) => {
-      if (lot.occupied_spots > 0) {
-        toast.error('Cannot delete parking lot with occupied spots')
-        return
-      }
-
-      if (confirm(`Are you sure you want to delete "${lot.prime_location_name}"?\n\nThis action cannot be undone.`)) {
-        const result = await store.dispatch('deleteParkingLot', lot.id)
-        if (result.success) {
-          toast.success('Parking lot deleted successfully!')
-          refreshLots()
-        } else {
-          toast.error(result.error)
+      try {
+        if (lot.occupied_spots > 0) {
+          toast.error('Cannot delete parking lot with occupied spots')
+          return
         }
+
+        const confirmed = confirm(
+          `Are you sure you want to delete "${lot.prime_location_name}"?\n\n` +
+          `This will permanently remove:\n` +
+          `- The parking lot\n` +
+          `- All ${lot.number_of_spots} parking spots\n` +
+          `- All associated data\n\n` +
+          `This action cannot be undone.`
+        )
+
+        if (confirmed) {
+          console.log('Component: Deleting lot with ID:', lot.id)
+          
+          const result = await store.dispatch('deleteParkingLot', lot.id)
+          
+          console.log('Component: Delete result:', result)
+
+          if (result && result.success) {
+            toast.success('Parking lot deleted successfully!')
+          } else {
+            const errorMessage = result?.error || 'Delete operation failed'
+            toast.error(errorMessage)
+            console.error('Component: Delete operation failed:', result)
+          }
+        }
+      } catch (error) {
+        console.error('Component: Error in deleteLot:', error)
+        toast.error('An unexpected error occurred: ' + error.message)
       }
     }
 
@@ -545,6 +602,7 @@ export default {
     }
 
     const refreshLots = () => {
+      console.log('Component: Refreshing parking lots...')
       store.dispatch('fetchParkingLots')
       toast.info('Parking lots refreshed!')
     }
@@ -555,6 +613,7 @@ export default {
     }
 
     onMounted(() => {
+      console.log('Component: Mounted, fetching parking lots...')
       store.dispatch('fetchParkingLots')
     })
 

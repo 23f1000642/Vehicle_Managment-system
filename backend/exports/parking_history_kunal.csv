@@ -1,2 +1,10 @@
-Location,Spot,Parked Time,Released Time,Cost,Status
-City Mall Parking,1,2025-07-20T10:44:34.861074,Active,50,active
+Reservation ID,Location,Spot Number,Parking Time,Leaving Time,Cost,Status
+2,City Mall Parking,1,2025-07-20 10:44:34,2025-07-20 10:45:48,₹50.0,completed
+3,Indore mall,1,2025-07-20 10:45:59,2025-07-20 13:01:04,₹90.06,completed
+9,DB centre,2,2025-07-20 13:16:51,2025-07-25 15:12:47,₹3657.97,completed
+13,Indore mall,2,2025-07-25 15:13:02,2025-07-25 15:13:19,₹40.0,completed
+14,Indore mall,2,2025-07-25 15:13:32,2025-07-25 15:15:25,₹40.0,completed
+15,Indore mall,2,2025-07-25 15:15:37,2025-07-25 17:15:39,₹80.03,completed
+18,City Mall Parking,2,2025-07-25 17:16:11,2025-07-26 04:05:58,₹541.48,completed
+21,BRT shopping centre,1,2025-07-26 04:07:35,2025-07-29 17:46:51,₹3426.18,completed
+23,City Mall Parking,1,2025-07-29 17:47:01,Active,₹50.0,active
