@@ -1,0 +1,7 @@
+Reservation ID,Location,Spot Number,Parking Time,Leaving Time,Cost,Status
+4,DB centre,1,2025-07-20 11:04:40,2025-07-20 11:22:14,₹30.0,completed
+5,City Mall Parking,1,2025-07-20 11:22:28,2025-07-20 11:22:43,₹50.0,completed
+6,Indore mall,2,2025-07-20 11:23:00,2025-07-20 11:23:09,₹40.0,completed
+7,Indore mall,2,2025-07-20 11:23:11,2025-07-20 12:08:19,₹40.0,completed
+8,DB centre,1,2025-07-20 12:08:30,2025-07-20 14:20:03,₹65.78,completed
+10,Mumbai center mall,1,2025-07-20 14:20:16,Active,₹50.0,active
